@@ -26,7 +26,7 @@
 
 	<div class="container">
 		<div class="jumbotron">
-			<h1>Host Ping</h1>
+			<h1>Host Ping!</h1>
 			<p>Pings given host</p>
 		</div>
 
@@ -34,10 +34,8 @@
 			<div class="form-group">
 				<label class="sr-only" for="hostTxt">Hostname / IP address</label>
   				<input type="text" class="form-control input-lg" id="hostTxt" name="hostTxt" placeholder="Hostname / IP address">
-		
   			</div>
-			<button type="submit" class="btn-lg btn-primary" id="pingBtn"
-				name="pingBtn">Ping</button>
+			<button type="submit" class="btn-lg btn-primary" id="pingBtn" name="pingBtn">Ping</button>
 			<div id="busy1" class="square"></div>
 		</form>
 		
@@ -46,8 +44,8 @@
 	</div>
 	<!-- put scrits below -->
 	
-	<script src="js/jquery-3.2.1.slim.js"></script>
-	<script src='js/jquery.activity-indicator-1.0.0.min.js'></script>
+	<script src="js/jquery-3.6.0.min.js"></script>
+	<script src='js/jquery.activity-indicator-1.0.0.min.js'></script> 
 	<script src="js/popper.min.js"></script>
 	<script src="bootstrap/js/bootstrap.min.js"></script>
 
@@ -59,7 +57,7 @@
 						return false;
 					});
 
-					$('#pingBtn').click(
+					$("#pingBtn").click(
 							function() {
 
 								$('#hostTxt').activity({
@@ -73,9 +71,9 @@
 									color : '#000',
 									speed : 1.5
 								});
-								var host = $('#hostTxt').attr('value');
-								console.log("hello %s",host);
-								$.getJSON('hostping.ks', $('#hostTxt'), function(
+								console.log("hello %s",$("#hostTxt").val());
+								var url = "hostping.ks?hostTxt="+$("#hostTxt").val();
+								$.getJSON(url, function(
 										data, textStatus) {
 									//data contains the JSON object
 									//textStatus contains the status: success, error, etc
@@ -88,7 +86,6 @@
 									}
 									$('#msg').html("<p>" + data.msg + "</p>");
 									$('#hostTxt').activity(false);
-
 								});
 							});
 				});

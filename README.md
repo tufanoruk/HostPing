@@ -8,3 +8,8 @@ Utilizes Apache, bootstrap, JS, Perl and a small C program to invoke Perl script
 2. Add "httpd-hostping.conf" to apache configuration.
 3. Run apache web server.
 4. Go to the hostping page.
+
+Notes for Apache server;
+- mod_cgi must be loaded. check main config file
+- user running apache http server should be able to access and write service directory
+- check main config file User and Group directives

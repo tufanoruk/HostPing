@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl -w
 #
 # hostping.pl
 #
@@ -7,6 +7,8 @@
 # root. But apache does not like this. So a wrapper
 # program is used which runs as root with setuid set 
 # (hostping.c)
+#
+# % sudo chmod 4755 hostping.ks
 #
 
 use strict;
@@ -19,7 +21,7 @@ use Net::Nslookup;
 use Time::HiRes;
 
 open (LOG, ">>hostping.log");
-print LOG "in hostping.pl\n";
+# print LOG "in hostping.pl\n";
 
 my $PING_RETRY_COUNT = 3;
 my $HOSTS_FILE = '/etc/hosts';
@@ -27,6 +29,8 @@ my $HOSTS_FILE = '/etc/hosts';
 my $q = new CGI;
 
 my $phost = &trim($q->param("hostTxt"));
+
+# print LOG "got param '$phost'\n";
 
 my $host = $phost;
 my $ret = 0;
@@ -37,6 +41,9 @@ my $msg = localtime();
 
 my $isfqdn = &is_fqdn_valid($host);
 my $isipaddr = &is_ipaddr_valid($host);
+
+# print LOG "FQDN\n" if $isfqdn;
+# print LOG "IP\n" if $isipaddr;
 
 if ( $isfqdn || $isipaddr) {
 
@@ -51,7 +58,7 @@ if ( $isfqdn || $isipaddr) {
   $ip = $pip if $pip;
   $ip = $phost if not $pip and $isipaddr;
   
-  print LOG "$ret; $duration; $ip\n";
+  # print LOG "$ret; $duration; $ip\n";
 
   if ($ret) {
     $msg .= "<p>$host ($ip)</p><p>SUCEESS</p><p>$duration ms</p>";
@@ -73,13 +80,15 @@ print $json;
 
 print LOG "$json\n";
 
-print LOG "leaving hostping.pl\n";
+# print LOG "leaving hostping.pl\n";
 close LOG;
 
 #######
 
 sub host_ping {
   my $host = $_[0];
+
+  # print LOG "will ping $host\n";
 
   my $p = Net::Ping->new("icmp", 3.0, 56); # protocol, timeout, data bytes
   $p->hires();
@@ -88,16 +97,17 @@ sub host_ping {
 
   for (my $i = 0; $i < $PING_RETRY_COUNT; $i++) {
     ($ret, $duration, $ip) = $p->ping ($host);
- 
+    # print LOG "*"; 
     last if ($ret);
     sleep 1;
   }
   $p->close();
   $duration = $duration * 1000.0; # to miliseconds
+  
+  # print LOG "$host\@$ip pinged\n";
+
   return ($ret, $duration, $ip);
 }
-
-
 
 #--------------------------------------------
 # returns true if hostname is valid (regexp from stackoverflow)
@@ -144,6 +154,3 @@ sub get_hostname {
   return $host if defined $host;
   return "unknown"; 
 }
-
-
-
