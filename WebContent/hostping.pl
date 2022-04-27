@@ -1,4 +1,4 @@
-#!/usr/bin/env perl -w
+#!/usr/bin/perl -w
 #
 # hostping.pl
 #
@@ -14,8 +14,8 @@ use warnings;
 
 use CGI;
 use JSON;
+use Socket;
 use Net::Ping;
-use Net::Nslookup;
 use Time::HiRes;
 
 open (LOG, ">>../log/hostping.log");
@@ -26,7 +26,7 @@ my $HOSTS_FILE = '/etc/hosts';
 
 my $q = new CGI;
 
-my $phost = &trim($q->param("hostTxt"));
+my ($phost) = &trim($q->param("hostTxt"));
 
 # print LOG "got param '$phost'\n";
 
@@ -138,17 +138,24 @@ sub trim($) {
 # finds hostname of given id from DNS or hosts file
 #--------------------------------------------
 sub get_hostname {
-  my $ip = shift;
-  my $host = nslookup(host => $ip, type => "PTR");
-                
-  if(not $host)  { 
-      open my $fh, $HOSTS_FILE or warn "Could not open $HOSTS_FILE: $!";
-      my @lines = grep /$ip/, <$fh>;
-      close $fh;
-      chop $lines[0];
-      my @line = split /\s+/, $lines[0];
-      $host = $line[1];
-  }
-  return $host if defined $host;
-  return "unknown"; 
+    my $ip = shift;
+    my $iaddr = inet_aton($ip); 
+    my $host  = gethostbyaddr($iaddr, AF_INET);
+    $host = &from_hosts_file($ip) if not $host;
+    return $host ? $host : "unknown"
 }
+
+sub from_hosts_file { 
+    my $ip = shift;
+    open my $fh, $HOSTS_FILE or warn "Could not open $HOSTS_FILE: $!";
+    my @lines = grep /$ip/, <$fh>;
+    my $host = undef;
+    close $fh;
+    if (@lines) {
+        chop $lines[0];
+        my @line = split /\s+/, $lines[0];
+        $host = $line[1];
+    }
+    return $host;
+}   
+

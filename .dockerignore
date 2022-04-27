@@ -1,0 +1,17 @@
+# comment
+*/temp*
+*/*/temp*
+temp?
+.DS_Store
+.dockerignore
+.settings
+.project
+.vscode
+.git
+.gitignore
+.includepath
+Dockerfile
+*.md
+*.log
+*.ks
+*~

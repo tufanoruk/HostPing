@@ -10,6 +10,7 @@ Utilizes Apache, bootstrap, JS, Perl and a small C program to invoke Perl script
 4. Go to the hostping page.
 
 Notes for Apache http configuration ;
+
 - mod_cgi must be loaded
-- user running apache http server should be able to access and write service directory
+- user running apache http server should be able to access and write log directory
 - check User and Group directives
