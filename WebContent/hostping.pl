@@ -8,8 +8,6 @@
 # program is used which runs as root with setuid set 
 # (hostping.c)
 #
-# % sudo chmod 4755 hostping.ks
-#
 
 use strict;
 use warnings;
@@ -20,7 +18,7 @@ use Net::Ping;
 use Net::Nslookup;
 use Time::HiRes;
 
-open (LOG, ">>hostping.log");
+open (LOG, ">>../log/hostping.log");
 # print LOG "in hostping.pl\n";
 
 my $PING_RETRY_COUNT = 3;

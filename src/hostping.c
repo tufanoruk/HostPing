@@ -4,10 +4,10 @@
  * Wrapper program to run hostping.pl script as root with setuid for apache.
  *
  * Use an extention to define as runnable cgi
- * gcc -o hostping.ks hostping.c
+ * gcc -Wall -o ../WebContent/hostping.ks hostping.c
  *
- * chown root.root hostping.ks
- * chmod 4755 hostping.ks
+ * sudo chown root hostping.ks
+ * sudo chmod 4755 hostping.ks
  *
  */
 
