@@ -2,3 +2,5 @@ log/
 *.log
 hostping.ks
 *~
+.sudo_as_admin_successful
+.vagrant
